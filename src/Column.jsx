@@ -1,29 +1,29 @@
-import React from 'react';
-import styled from 'styled-components';
-import Task from './Task.jsx';
+import React, { Component } from "react";
+import Task from "./task";
+import { Droppable } from "react-beautiful-dnd";
 
-const Container = styled.div`
-    margin: 8px;
-    border: 1px solid lightgrey;
-    border-radius:2px;
-`;
-const Title = styled.h3`
-    padding: 8px;`;
+const divStyle = {
+  margin: "10px",
+  height: "350px",
+  border: "1px solid black"
+};
 
-const Tasklist = styled.div`
-    padding: 8px`;
-
-class Column extends React.Component {
-    render(){
-        return (
-            <Container>
-                <Title> {this.props.column.title}</Title>
-                <Tasklist>{this.props.tasks.map(task=> {
-                    return <Task key={task.id} task ={task}/>
-                })} </Tasklist>
-            </Container>
-        )
-    }
+export default class Column extends Component {
+  render() {
+    return (
+      <div style={divStyle}>
+        <h3>{this.props.column.title}</h3>
+        <Droppable droppableId={this.props.column.id}>
+          {provided => (
+            <div ref={provided.innerRef} {...provided.droppableProps}>
+              {this.props.tasks.map((task, index) => (
+                <Task key={task.id} task={task} index={index} />
+              ))}
+              {provided.placeholder}
+            </div>
+          )}
+        </Droppable>
+      </div>
+    );
+  }
 }
-
-export default Column;
